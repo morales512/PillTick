@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://pilltick-b8213.web.app", "http://localhost:5000", "*"],
+    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "x-goog-meta-uuid", "x-goog-meta-owner"]
+  }
+]

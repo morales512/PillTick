@@ -1,89 +1,161 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PillTick – Recordatorio Inteligente de Medicamentos</title>
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.6.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.6.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+  <!-- AQUÍ ESTÁ LA REFERENCIA AL CSS – ¡NUNCA LA QUITES! -->
+  <link rel="stylesheet" href="style.css">
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+  <style>
+    /* —— MODAL (estilos mínimos inline para que funcione aunque falle el CSS) —— */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal-bg[style*="flex"] { display: flex !important; }
+    .modal-card {
+      background: #fff;
+      padding: 35px;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .modal-card button { width: 100%; padding: 14px; margin-top: 15px; font-size: 1.1em; }
+    .modal-card .cancel { background: #7f8c8d; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>PillTick</h1>
+    <div>
+      <span id="user-name" style="font-weight:bold;"></span>
+      <button id="login-btn">Iniciar sesión con Google</button>
+      <button id="logout-btn" style="display:none;">Cerrar sesión</button>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+  </header>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+  <main id="app" style="display:none;">
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+    <!-- FORMULARIO AGREGAR / EDITAR -->
+    <section class="form-card">
+      <h2 id="form-title">Agregar medicamento</h2>
+
+      <label>Nombre del medicamento</label>
+      <input id="med-name" type="text" placeholder="Ej: Paracetamol" required>
+
+      <label>Dosis</label>
+      <input id="med-dose" type="text" placeholder="Ej: 1 comprimido de 500mg" required>
+
+      <label>Hora de la primera toma del día</label>
+      <input id="med-first-time" type="time" value="08:00" required>
+
+      <label>Fecha de inicio</label>
+      <input id="med-start" type="date" required>
+
+      <label>Fecha de fin (opcional)</label>
+      <input id="med-end" type="date">
+
+      <label>Veces al día</label>
+      <input id="med-times" type="number" min="1" max="12" value="3" required>
+
+      <label>Imagen de la caja (opcional)</label>
+      <input id="med-img" type="file" accept="image/*">
+
+      <label>Receta médica en PDF (opcional)</label>
+      <input id="med-pdf" type="file" accept="application/pdf">
+
+      <div style="margin-top:25px;">
+        <div id="form-error" class="error-msg"></div>
+        <button id="add-med-btn">Guardar medicamento</button>
+        <button id="update-med-btn" style="display:none; background:#e67e22;">Actualizar medicamento</button>
+        <button id="cancel-edit-btn" style="display:none; background:#95a5a6; margin-left:10px;">Cancelar</button>
+      </div>
+    </section>
+
+    <!-- PERMISO DE NOTIFICACIONES -->
+    <div id="notification-permission" style="display:none;">
+      <strong>Activa las notificaciones</strong> para que PillTick te avise cuando toque tomar tus medicamentos
+      <button id="enable-notifications">Activar ahora</button>
+    </div>
+
+    <h2 style="margin-top:40px;">Mis medicamentos activos</h2>
+    <div id="med-list">
+      <!-- Aquí se cargan las tarjetas automáticamente -->
+    </div>
+  </main>
+
+<!-- MODAL DE EDICIÓN – VERSIÓN MEJORADA -->
+<div id="edit-modal" class="modal-bg">
+  <div class="modal-card">
+    <h2>Editar medicamento</h2>
+
+    <div class="modal-scroll">
+      <label>Nombre</label>
+      <input id="edit-name" type="text">
+
+      <label>Dosis</label>
+      <input id="edit-dose" type="text">
+
+      <label>Hora primera toma</label>
+      <input id="edit-first-time" type="time">
+
+      <label>Fecha inicio</label>
+      <input id="edit-start" type="date">
+
+      <label>Fecha fin (opcional)</label>
+      <input id="edit-end" type="date">
+
+      <label>Veces al día</label>
+      <input id="edit-times" type="number" min="1" max="12">
+
+      <label>Nueva imagen (opcional)</label>
+      <input id="edit-img" type="file" accept="image/*">
+
+      <label>Nuevo PDF (opcional)</label>
+      <input id="edit-pdf" type="file" accept="application/pdf">
+    </div>
+
+    <div style="margin-top:20px;">
+      <button id="save-edit-btn">Guardar cambios</button>
+      <button id="cancel-modal-btn" class="cancel">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== CHATBOT FLOTANTE (FUNCIONA SÍ O SÍ) ====== -->
+<div id="chatbot-container">
+  <div id="chatbot-bubble">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+      <path d="M21 11.5a8.5 8.5 0 0 1-8.4 8.5c-1.4 0-2.7-.3-3.9-.9l-4.4 1.4 1.4-4.4a8.5 8.5 0 0 1-.9-3.9A8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8.5Z"/>
+      <path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M9.5 15a3.5 3.5 0 0 0 5 0"/>
+    </svg>
+  </div>
+
+  <div id="chatbot-window">
+    <div id="chat-header">
+      <strong>PillTick Asistente</strong>
+      <button id="chat-close">×</button>
+    </div>
+    <div id="chat-messages">
+      <div class="message bot-message">¡Hola! Pregúntame sobre medicamentos, salud, ejercicio o sueño</div>
+    </div>
+    <div id="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Escribe aquí...">
+      <button id="chat-send">Enviar</button>
+    </div>
+  </div>
+</div>
+
+  <!-- SCRIPT PRINCIPAL -->
+  <script type="module" src="app.js"></script>
+</body>
 </html>
