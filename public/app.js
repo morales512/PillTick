@@ -221,7 +221,6 @@ addMedBtn.onclick = async () => {
     return;
   }
 
-  // Si todo está bien → procedemos
   const userId = auth.currentUser.uid;
   const horarios = generateSchedule(medFirstTime.value, Number(medTimes.value));
 
@@ -456,7 +455,6 @@ window.posponerToma = (medId, hora) => {
 
   alert(`Recordatorio pospuesto a las ${hh}:${mm}`);
 
-  // Reprogramamos el recordatorio
   setTimeout(() => {
     new Notification("¡Hora de tu medicamento!", {
       body: `Tienes pendiente una toma (pospuesta)`,
@@ -469,13 +467,13 @@ window.posponerToma = (medId, hora) => {
 
 
 // =========================
-// CHATBOT GEMINI – FUNCIONA 100% (ABRE Y HABLA CON gemini-2.0-flash)
+// CHATBOT GEMINI 
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
   const chatBubble   = document.getElementById("chatbot-bubble");
   const chatWindow   = document.getElementById("chatbot-window");
   const chatClose    = document.getElementById("chat-close");
-  const chatMinimize = document.getElementById("chat-minimize");   // puede no existir, no pasa nada
+  const chatMinimize = document.getElementById("chat-minimize");   
   const chatMessages = document.getElementById("chat-messages");
   const chatInput    = document.getElementById("chat-input");
   const chatSend     = document.getElementById("chat-send");
@@ -491,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
   chatClose.onclick = () => chatWindow.classList.remove("open");
   if (chatMinimize) chatMinimize.onclick = () => chatWindow.classList.remove("open");
 
-  // TU API KEY REAL (la de tu guía rápida)
+
   const API_KEY = "AIzaSyBN8rG1f4GDnyflk0NFnYihgE4jJ6Szpak";
 
   const enviar = async () => {

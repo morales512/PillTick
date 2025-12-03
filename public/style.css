@@ -118,7 +118,7 @@ label {
   z-index: 999;
 }
 
-.modal-bg[style*="flex"] { /* cuando lo mostramos con JS */
+.modal-bg[style*="flex"] { 
   display: flex !important;
 }
 
@@ -155,7 +155,7 @@ label {
   color: #2e7d32;
 }
 
-/* ===== MODAL MEJORADO – NUNCA SE SALE DE PANTALLA ===== */
+/* ===== MODAL ===== */
 .modal-card {
   max-height: 90vh;
   width: 90%;
